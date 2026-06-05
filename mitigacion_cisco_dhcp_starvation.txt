@@ -1,0 +1,20 @@
+! =====================================================================
+! SCRIPT DE MITIGACIÓN: PROTECCIÓN CONTRA DHCP STARVATION DOS (ESCENARIO 6)
+! Protocolo Afectado: DHCP (Agotamiento del Pool de Direcciones IP)
+! =====================================================================
+
+configure terminal
+
+! 1. Asegurar que DHCP Snooping este activo en el segmento
+ip dhcp snooping
+ip dhcp snooping vlan 66
+
+! 2. Limitar drasticamente la tasa de paquetes por segundo en el puerto del usuario (e0/3)
+! Al capar las peticiones a un maximo de 10 paquetes por segundo, se neutraliza la velocidad del script.
+interface ethernet 0/3
+ description Puerto_Sujeto_A_Auditoria_Starvation
+ ip dhcp snooping limit rate 10
+ exit
+
+end
+write memory
